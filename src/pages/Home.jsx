@@ -1,6 +1,6 @@
-import {Categories, PizzaBlock, SortPopup} from "../componets";
+import {Categories, PizzaBlock, Skeleton, SortPopup} from "../componets";
 
-function Home({pizzasBloks}) {
+function Home({pizzasBloks, statusLoading}) {
     return (
         <div className="container">
             <div className="content__top">
@@ -20,9 +20,12 @@ function Home({pizzasBloks}) {
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
                 {
-                    pizzasBloks.map(item => {
-                        return <PizzaBlock key={item.id} {...item}/>
-                    })
+                    statusLoading ? [...new Array(6)].map((_, index) => {
+                            return <Skeleton key={index}/>;
+                        }) :
+                        pizzasBloks.map(item => {
+                            return <PizzaBlock key={item.id} {...item}/>;
+                        })
                 }
             </div>
         </div>
