@@ -28,4 +28,16 @@
       }
     }
   }
+  
+  @media (max-width: 930px) {
+    ul {
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: -20px;
+    }
+
+    li{
+      margin-top: 20px;
+    }
+  }
 }
