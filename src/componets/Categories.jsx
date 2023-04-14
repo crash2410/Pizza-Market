@@ -1,26 +1,17 @@
 import {useState} from "react";
 
-function Categories({items}) {
-    const [activeItem, setActiveItem] = useState(null);
+function Categories({items, value, onClickCaterogy}) {
 
-    const onSelectItem = (index) => {
-        setActiveItem(index);
-    }
+
 
     return (
         <div className="categories">
             <ul>
-                <li
-                    className={activeItem === null ? 'active' : ''}
-                    onClick={() => {
-                        onSelectItem(null)
-                    }}>Все
-                </li>
                 {
                     items && items.map((name, index) => {
                         return <li
-                            className={activeItem === index ? 'active' : ''}
-                            onClick={() => onSelectItem(index)}
+                            className={value === index ? 'active' : ''}
+                            onClick={() => onClickCaterogy(index)}
                             key={`${name}_${index}`}
                         >
                             {name}

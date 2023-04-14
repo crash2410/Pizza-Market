@@ -1,21 +1,32 @@
 import {useEffect, useRef, useState} from "react";
 
-function SortPopup({items}) {
+function SortPopup({values, onSortedPizza, onClickSort}) {
     const [visiblePopup, setVisiblePopup] = useState(false);
-    const [activeSort, setActiveSort] = useState(0);
     const sortRef = useRef();
+    const items = [
+        {name: 'популярности (DESC)', sortProperty: 'rating'},
+        {name: 'популярности (ASC)', sortProperty: '-rating'},
+        {name: 'цене (DESC)', sortProperty: 'price'},
+        {name: 'цене (ASC)', sortProperty: '-price'},
+        {name: 'алфавиту (DESC)', sortProperty: 'name'},
+        {name: 'алфавиту (ASC)', sortProperty: '-name'},
+    ]
 
     const toggleVisiblePopup = () => {
         setVisiblePopup(!visiblePopup);
     }
-    const onSelectSort = (elem) => {
-        setActiveSort(elem);
-    }
+    // const onSelectSort = (elem) => {
+    //     const nameFilter = {
+    //         0: 'rating',
+    //         1: 'price',
+    //         2: 'name'
+    //     }
+    //     onSortedPizza(nameFilter[`${elem}`])
+    // }
     const handleOutsideClick = (e) => {
         if (!e.composedPath().includes(sortRef.current)) {
             setVisiblePopup(false);
         }
-        ;
     }
 
     useEffect(() => {
@@ -39,19 +50,19 @@ function SortPopup({items}) {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={toggleVisiblePopup}>{items[activeSort]}</span>
+                <span onClick={toggleVisiblePopup}>{values.name}</span>
             </div>
             {visiblePopup && <div className="sort__popup">
                 <ul>
                     {
                         items.map((item, index) => {
                             return <li
-                                key={`${item}_${index}`}
-                                className={activeSort === index ? 'active' : ''}
+                                key={`${item.name}_${index}`}
+                                className={values === index ? 'active' : ''}
                                 onClick={() => {
-                                    onSelectSort(index)
+                                    onClickSort(item)
                                 }}
-                            >{item}</li>
+                            >{item.name}</li>
                         })
                     }
                 </ul>
