@@ -1,6 +1,6 @@
-import {Categories, PizzaBlock, Skeleton, SortPopup} from "../componets";
+import {Categories, Pagination, PizzaBlock, Skeleton, SortPopup} from "../componets";
 
-function Home({pizzasBloks, statusLoading, onSortedPizza, categoryValues, onClickCaterogy, sortValues, onClickSort}) {
+function Home({pizzasBloks, statusLoading, onSortedPizza, categoryValues, onClickCaterogy, sortValues, onClickSort, setCurrentPage,currentPage}) {
     return (
         <div className="container">
             <div className="content__top">
@@ -32,6 +32,10 @@ function Home({pizzasBloks, statusLoading, onSortedPizza, categoryValues, onClic
                         })
                 }
             </div>
+            <Pagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+            />
         </div>
     )
 }
