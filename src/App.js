@@ -1,9 +1,11 @@
 import {Header} from './componets';
 import {Cart, Home, NotFound} from "./pages";
 import {Route, Routes} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {createContext, useEffect, useState} from "react";
 import axios from "axios";
 
+export const SearchContext = createContext();
+export const SortingAndFilteredPizzas = createContext();
 
 function App() {
     const [pizzas, setPizzas] = useState([]);
@@ -35,20 +37,22 @@ function App() {
 
     return (
         <div className="wrapper">
-            <Header searchValue={searchValue} setSearchValue={setSearchValue}/>
+            <SearchContext.Provider value={{searchValue, setSearchValue}}>
+                <Header/>
+            </SearchContext.Provider>
             <div className="content">
                 <Routes>
                     <Route path="*"
-                           element={<Home
-                               currentPage={currentPage}
-                               setCurrentPage={setCurrentPage}
-                               categoryValues={activeCategory}
-                               onClickCaterogy={(i) => setActiveCategory(i)}
-                               sortValues={activeSort}
-                               onClickSort={(i) => setActiveSort(i)}
-                               statusLoading={isLoading}
-                               pizzasBloks={pizzas}
-                           />}/>
+                           element={
+                               <SortingAndFilteredPizzas.Provider
+                                   value={{activeCategory, setActiveCategory, activeSort, setActiveSort}}>
+                                   <Home
+                                       setCurrentPage={setCurrentPage}
+                                       statusLoading={isLoading}
+                                       pizzasBlocks={pizzas}
+                                   />
+                               </SortingAndFilteredPizzas.Provider>
+                           }/>
                     <Route path="/cart" element={<Cart/>}/>
                     <Route path="/404" element={<NotFound/>}/>
                 </Routes>

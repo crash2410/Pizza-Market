@@ -1,12 +1,15 @@
 import {Categories, Pagination, PizzaBlock, Skeleton, SortPopup} from "../componets";
 
-function Home({pizzasBloks, statusLoading, onSortedPizza, categoryValues, onClickCaterogy, sortValues, onClickSort, setCurrentPage,currentPage}) {
+function Home({
+                  pizzasBlocks,
+                  statusLoading,
+                  setCurrentPage,
+                  currentPage
+              }) {
     return (
         <div className="container">
             <div className="content__top">
                 <Categories
-                    onClickCaterogy={onClickCaterogy}
-                    value={categoryValues}
                     items={[
                         'Все',
                         'Мясные',
@@ -16,10 +19,7 @@ function Home({pizzasBloks, statusLoading, onSortedPizza, categoryValues, onClic
                         'Закрытые'
                     ]}/>
                 <SortPopup
-                    values={sortValues}
-                    onClickSort={onClickSort}
-                    onSortedPizza={onSortedPizza}
-                    />
+                />
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
@@ -27,13 +27,12 @@ function Home({pizzasBloks, statusLoading, onSortedPizza, categoryValues, onClic
                     statusLoading ? [...new Array(6)].map((_, index) => {
                             return <Skeleton key={index}/>;
                         }) :
-                        pizzasBloks.map(item => {
+                        pizzasBlocks.map(item => {
                             return <PizzaBlock key={item.id} {...item}/>;
                         })
                 }
             </div>
             <Pagination
-                currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
             />
         </div>

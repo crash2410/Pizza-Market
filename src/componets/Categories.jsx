@@ -1,7 +1,8 @@
-import {useState} from "react";
+import {useContext} from "react";
+import {SortingAndFilteredPizzas} from "../App";
 
-function Categories({items, value, onClickCaterogy}) {
-
+function Categories({items}) {
+    const {setActiveCategory, activeCategory} = useContext(SortingAndFilteredPizzas);
 
 
     return (
@@ -10,8 +11,8 @@ function Categories({items, value, onClickCaterogy}) {
                 {
                     items && items.map((name, index) => {
                         return <li
-                            className={value === index ? 'active' : ''}
-                            onClick={() => onClickCaterogy(index)}
+                            className={activeCategory === index ? 'active' : ''}
+                            onClick={() => setActiveCategory(index)}
                             key={`${name}_${index}`}
                         >
                             {name}

@@ -1,6 +1,9 @@
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
+import {SortingAndFilteredPizzas} from "../App";
 
-function SortPopup({values, onSortedPizza, onClickSort}) {
+function SortPopup() {
+    const {activeSort, setActiveSort} = useContext(SortingAndFilteredPizzas);
+
     const [visiblePopup, setVisiblePopup] = useState(false);
     const sortRef = useRef();
     const items = [
@@ -15,14 +18,6 @@ function SortPopup({values, onSortedPizza, onClickSort}) {
     const toggleVisiblePopup = () => {
         setVisiblePopup(!visiblePopup);
     }
-    // const onSelectSort = (elem) => {
-    //     const nameFilter = {
-    //         0: 'rating',
-    //         1: 'price',
-    //         2: 'name'
-    //     }
-    //     onSortedPizza(nameFilter[`${elem}`])
-    // }
     const handleOutsideClick = (e) => {
         if (!e.composedPath().includes(sortRef.current)) {
             setVisiblePopup(false);
@@ -50,7 +45,7 @@ function SortPopup({values, onSortedPizza, onClickSort}) {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={toggleVisiblePopup}>{values.name}</span>
+                <span onClick={toggleVisiblePopup}>{activeSort.name}</span>
             </div>
             {visiblePopup && <div className="sort__popup">
                 <ul>
@@ -58,9 +53,9 @@ function SortPopup({values, onSortedPizza, onClickSort}) {
                         items.map((item, index) => {
                             return <li
                                 key={`${item.name}_${index}`}
-                                className={values === index ? 'active' : ''}
+                                className={activeSort === index ? 'active' : ''}
                                 onClick={() => {
-                                    onClickSort(item)
+                                    setActiveSort(item)
                                 }}
                             >{item.name}</li>
                         })
