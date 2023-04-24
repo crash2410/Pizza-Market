@@ -3,6 +3,8 @@ import {Cart, Home, NotFound} from "./pages";
 import {Route, Routes} from "react-router-dom";
 import {createContext, useEffect, useState} from "react";
 import axios from "axios";
+import {useSelector} from "react-redux";
+
 
 export const SearchContext = createContext();
 export const SortingAndFilteredPizzas = createContext();
@@ -10,17 +12,17 @@ export const SortingAndFilteredPizzas = createContext();
 function App() {
     const [pizzas, setPizzas] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [activeCategory, setActiveCategory] = useState(0);
-    const [activeSort, setActiveSort] = useState({name: 'популярности (DESC)', sortProperty: 'rating'});
     const [searchValue, setSearchValue] = useState('');
     const [currentPage, setCurrentPage] = useState(0)
-    console.log(searchValue);
+
+    const {categoryId , sort} = useSelector(state => state.filter)
+
     const onSortingAndFiltered = () => {
         let urlData;
-        let order = activeSort.sortProperty.includes('-') ? 'asc' : 'desc';
+        let order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
         let search = searchValue !== '' ? `&search=${searchValue}` : '';
-        activeCategory === 0 ? urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?page=${currentPage+1}&limit=4&sortBy=${activeSort.sortProperty.replace('-', '')}&order=${order}${search}`) :
-            urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?category=${activeCategory}&sortBy=${activeSort.sortProperty.replace('-', '')}&order=${order}${search}`);
+        categoryId === 0 ? urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?page=${currentPage + 1}&limit=4&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`) :
+            urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?category=${categoryId}&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`);
         return urlData;
     }
 
@@ -32,7 +34,7 @@ function App() {
             setPizzas(data);
         });
         window.scrollTo(0, 0);
-    }, [activeCategory, activeSort, searchValue, currentPage])
+    }, [categoryId, sort, searchValue, currentPage])
 
 
     return (
@@ -44,14 +46,11 @@ function App() {
                 <Routes>
                     <Route path="*"
                            element={
-                               <SortingAndFilteredPizzas.Provider
-                                   value={{activeCategory, setActiveCategory, activeSort, setActiveSort}}>
-                                   <Home
-                                       setCurrentPage={setCurrentPage}
-                                       statusLoading={isLoading}
-                                       pizzasBlocks={pizzas}
-                                   />
-                               </SortingAndFilteredPizzas.Provider>
+                               <Home
+                                   setCurrentPage={setCurrentPage}
+                                   statusLoading={isLoading}
+                                   pizzasBlocks={pizzas}
+                               />
                            }/>
                     <Route path="/cart" element={<Cart/>}/>
                     <Route path="/404" element={<NotFound/>}/>

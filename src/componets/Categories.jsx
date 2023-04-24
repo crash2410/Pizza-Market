@@ -1,9 +1,11 @@
-import {useContext} from "react";
-import {SortingAndFilteredPizzas} from "../App";
 
+import {useSelector, useDispatch} from "react-redux";
+import { setCategoryId } from '../redux/slices/filterSlice';
 function Categories({items}) {
-    const {setActiveCategory, activeCategory} = useContext(SortingAndFilteredPizzas);
-
+    const categoryId = useSelector(state => {
+        return state.filter.categoryId
+    })
+    const dispatch = useDispatch()
 
     return (
         <div className="categories">
@@ -11,8 +13,8 @@ function Categories({items}) {
                 {
                     items && items.map((name, index) => {
                         return <li
-                            className={activeCategory === index ? 'active' : ''}
-                            onClick={() => setActiveCategory(index)}
+                            className={categoryId === index ? 'active' : ''}
+                            onClick={() => dispatch(setCategoryId(index))}
                             key={`${name}_${index}`}
                         >
                             {name}

@@ -1,10 +1,8 @@
 import {Categories, Pagination, PizzaBlock, Skeleton, SortPopup} from "../componets";
-
 function Home({
                   pizzasBlocks,
                   statusLoading,
                   setCurrentPage,
-                  currentPage
               }) {
     return (
         <div className="container">

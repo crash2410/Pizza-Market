@@ -1,11 +1,9 @@
-import {useContext, useEffect, useRef, useState} from "react";
-import {SortingAndFilteredPizzas} from "../App";
+import {useEffect, useRef, useState} from "react";
+
+import {useSelector, useDispatch} from "react-redux";
+import {setActiveSort} from '../redux/slices/filterSlice';
 
 function SortPopup() {
-    const {activeSort, setActiveSort} = useContext(SortingAndFilteredPizzas);
-
-    const [visiblePopup, setVisiblePopup] = useState(false);
-    const sortRef = useRef();
     const items = [
         {name: 'популярности (DESC)', sortProperty: 'rating'},
         {name: 'популярности (ASC)', sortProperty: '-rating'},
@@ -14,6 +12,14 @@ function SortPopup() {
         {name: 'алфавиту (DESC)', sortProperty: 'name'},
         {name: 'алфавиту (ASC)', sortProperty: '-name'},
     ]
+    const [visiblePopup, setVisiblePopup] = useState(false);
+
+    const activeSort = useSelector(state => {
+        return state.filter.sort;
+    })
+    const dispatch = useDispatch();
+
+    const sortRef = useRef();
 
     const toggleVisiblePopup = () => {
         setVisiblePopup(!visiblePopup);
@@ -55,7 +61,7 @@ function SortPopup() {
                                 key={`${item.name}_${index}`}
                                 className={activeSort === index ? 'active' : ''}
                                 onClick={() => {
-                                    setActiveSort(item)
+                                    dispatch(setActiveSort(item));
                                 }}
                             >{item.name}</li>
                         })
