@@ -1,9 +1,31 @@
 import styles from './Search.module.scss';
-import {useContext} from "react";
+import debounce from 'lodash.debounce';
+import {useCallback, useContext, useRef, useState} from "react";
 import {SearchContext} from "../../App";
 
 function Search() {
-    const {searchValue, setSearchValue} = useContext(SearchContext);
+    const [value, setValues] = useState('');
+    const {setSearchValue} = useContext(SearchContext);
+    const inputRef = useRef(null);
+
+    const onClickClear = () => {
+        setSearchValue('');
+        setValues('');
+        inputRef.current.focus();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const upDateSearchValue = useCallback(
+        debounce((str) => {
+            setSearchValue(str)
+        }, 1000),
+        []
+    )
+
+    const onChangeInput = event => {
+        setValues(event.target.value);
+        upDateSearchValue(event.target.value);
+    }
 
     return (
         <div className={styles.root}>
@@ -35,12 +57,15 @@ function Search() {
                     </g>
                 </g>
             </svg>
-            <input value={searchValue} onChange={(event) => setSearchValue(event.target.value)} className={styles.input}
+            <input ref={inputRef}
+                   value={value}
+                   onChange={onChangeInput}
+                   className={styles.input}
                    placeholder="Поиск пиццы..." type="text"/>
-            {searchValue !== '' &&
-                <svg onClick={() => setSearchValue('')}
-                    className={styles.icon_clear}
-                    fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            {value !== '' &&
+                <svg onClick={() => onClickClear()}
+                     className={styles.icon_clear}
+                     fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M7.004 23.087l7.08-7.081-7.07-7.071L8.929 7.02l7.067 7.069L23.084 7l1.912 1.913-7.089 7.093 7.075 7.077-1.912 1.913-7.074-7.073L8.917 25z"/>
                 </svg>

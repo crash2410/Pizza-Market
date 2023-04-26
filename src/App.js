@@ -13,15 +13,14 @@ function App() {
     const [pizzas, setPizzas] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchValue, setSearchValue] = useState('');
-    const [currentPage, setCurrentPage] = useState(0)
 
-    const {categoryId , sort} = useSelector(state => state.filter)
+    const {categoryId , sort, pageCount} = useSelector(state => state.filter)
 
     const onSortingAndFiltered = () => {
         let urlData;
         let order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
         let search = searchValue !== '' ? `&search=${searchValue}` : '';
-        categoryId === 0 ? urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?page=${currentPage + 1}&limit=4&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`) :
+        categoryId === 0 ? urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?page=${pageCount + 1}&limit=4&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`) :
             urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?category=${categoryId}&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`);
         return urlData;
     }
@@ -34,7 +33,7 @@ function App() {
             setPizzas(data);
         });
         window.scrollTo(0, 0);
-    }, [categoryId, sort, searchValue, currentPage])
+    }, [categoryId, sort, searchValue, pageCount])
 
 
     return (
@@ -47,7 +46,6 @@ function App() {
                     <Route path="*"
                            element={
                                <Home
-                                   setCurrentPage={setCurrentPage}
                                    statusLoading={isLoading}
                                    pizzasBlocks={pizzas}
                                />

@@ -2,7 +2,6 @@ import {Categories, Pagination, PizzaBlock, Skeleton, SortPopup} from "../compon
 function Home({
                   pizzasBlocks,
                   statusLoading,
-                  setCurrentPage,
               }) {
     return (
         <div className="container">
@@ -30,9 +29,7 @@ function Home({
                         })
                 }
             </div>
-            <Pagination
-                setCurrentPage={setCurrentPage}
-            />
+            <Pagination/>
         </div>
     )
 }
