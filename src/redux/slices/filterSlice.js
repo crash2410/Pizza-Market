@@ -18,10 +18,17 @@ export const filterSlice = createSlice({
         },
         setPageCount(state, action) {
             state.pageCount = action.payload;
+
+            console.log(state.pageCount);
+        },
+        setFilters(state, action) {
+            state.sort = action.payload.sort;
+            state.pageCount = Number(action.payload.pageCount);
+            state.categoryId = Number(action.payload.categoryId);
         }
     },
 })
 
-export const { setCategoryId, setActiveSort, setPageCount} = filterSlice.actions
+export const { setCategoryId, setActiveSort, setPageCount, setFilters} = filterSlice.actions
 
 export default filterSlice.reducer

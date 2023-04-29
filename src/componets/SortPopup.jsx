@@ -3,15 +3,16 @@ import {useEffect, useRef, useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {setActiveSort} from '../redux/slices/filterSlice';
 
+export const sortList = [
+    {name: 'популярности (DESC)', sortProperty: 'rating'},
+    {name: 'популярности (ASC)', sortProperty: '-rating'},
+    {name: 'цене (DESC)', sortProperty: 'price'},
+    {name: 'цене (ASC)', sortProperty: '-price'},
+    {name: 'алфавиту (DESC)', sortProperty: 'name'},
+    {name: 'алфавиту (ASC)', sortProperty: '-name'},
+]
+
 function SortPopup() {
-    const items = [
-        {name: 'популярности (DESC)', sortProperty: 'rating'},
-        {name: 'популярности (ASC)', sortProperty: '-rating'},
-        {name: 'цене (DESC)', sortProperty: 'price'},
-        {name: 'цене (ASC)', sortProperty: '-price'},
-        {name: 'алфавиту (DESC)', sortProperty: 'name'},
-        {name: 'алфавиту (ASC)', sortProperty: '-name'},
-    ]
     const [visiblePopup, setVisiblePopup] = useState(false);
 
     const activeSort = useSelector(state => {
@@ -56,7 +57,7 @@ function SortPopup() {
             {visiblePopup && <div className="sort__popup">
                 <ul>
                     {
-                        items.map((item, index) => {
+                        sortList.map((item, index) => {
                             return <li
                                 key={`${item.name}_${index}`}
                                 className={activeSort === index ? 'active' : ''}
