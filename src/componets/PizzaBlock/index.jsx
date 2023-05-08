@@ -1,12 +1,27 @@
-import {useState} from "react";
+import {useRef, useState} from "react";
 import classNames from "classnames";
 import PropTypes from 'prop-types';
+import {addItem} from '../../redux/slices/cartSlice';
+import {useDispatch, useSelector} from "react-redux";
 
-function Index({imageUrl, name, price, sizes, types}) {
+
+function Index({id, imageUrl, name, price, sizes, types}) {
     const availableTypes = ['тонкое', 'традиционное'];
     const availableSizes = [26, 30, 40];
     const [activeType, setActiveType] = useState(types[0]);
     const [activeSize, setActiveSize] = useState(sizes[0]);
+
+    const isTypePizza = useRef(null);
+    const isSizePizza = useRef(null);
+    const dispatch = useDispatch();
+    const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
+    const addedCount = cartItem ? cartItem.count : 0;
+
+    const addPizzaToCart = (id, name, imgUrl, price) => {
+        const pizza = {id, name, imgUrl, price, type: availableTypes[activeType], size: activeSize};
+        dispatch((addItem(pizza)));
+    }
+
 
     const toggleActiveType = (index) => {
         setActiveType(index);
@@ -25,7 +40,7 @@ function Index({imageUrl, name, price, sizes, types}) {
                 />
                 <h4 className="pizza-block__title">{name}</h4>
                 <div className="pizza-block__selector">
-                    <ul>
+                    <ul ref={isTypePizza}>
                         {
                             availableTypes.map((type, index) => {
 
@@ -38,12 +53,11 @@ function Index({imageUrl, name, price, sizes, types}) {
                                         'active': activeType === index,
                                         'disabled': !types.includes(index)
                                     })}>{type}</li>
-
-
                             })
+
                         }
                     </ul>
-                    <ul>
+                    <ul ref={isSizePizza}>
                         {
                             availableSizes.map((size, index) => {
                                 return <li
@@ -62,7 +76,11 @@ function Index({imageUrl, name, price, sizes, types}) {
                 </div>
                 <div className="pizza-block__bottom">
                     <div className="pizza-block__price">от ${price} ₽</div>
-                    <div className="button button--outline button--add">
+                    <div className="button button--outline button--add"
+                         onClick={() => {
+                             addPizzaToCart(id, name, imageUrl, price)
+                         }}
+                    >
                         <svg
                             width="12"
                             height="12"
@@ -76,7 +94,7 @@ function Index({imageUrl, name, price, sizes, types}) {
                             />
                         </svg>
                         <span>Добавить</span>
-                        <i>2</i>
+                        <i>{addedCount}</i>
                     </div>
                 </div>
             </div>

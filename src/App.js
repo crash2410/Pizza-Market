@@ -43,7 +43,7 @@ function App() {
             const params = qs.parse(window.location.search.substring(1));
 
             const sort = sortList.find(obj => obj.sortProperty === params.sortProperty);
-            console.log(params);
+            // console.log(sort, params);
             dispatch(setFilters({
                 ...params,
                 sort

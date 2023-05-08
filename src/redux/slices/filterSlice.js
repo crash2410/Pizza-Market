@@ -18,8 +18,6 @@ export const filterSlice = createSlice({
         },
         setPageCount(state, action) {
             state.pageCount = action.payload;
-
-            console.log(state.pageCount);
         },
         setFilters(state, action) {
             state.sort = action.payload.sort;
