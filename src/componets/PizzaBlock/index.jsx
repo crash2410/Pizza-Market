@@ -14,8 +14,22 @@ function Index({id, imageUrl, name, price, sizes, types}) {
     const isTypePizza = useRef(null);
     const isSizePizza = useRef(null);
     const dispatch = useDispatch();
-    const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
-    const addedCount = cartItem ? cartItem.count : 0;
+
+    let totalCount = 0;
+    const cartItem = useSelector((state) => state.cart.items.filter((obj) => {
+        return obj.id === id
+    }).map((cart)=>{
+        totalCount += cart.count;
+        return totalCount;
+
+    }));
+    const addedCount = () => {
+        if (cartItem) {
+            return totalCount
+        } else {
+            return 0
+        }
+    }
 
     const addPizzaToCart = (id, name, imgUrl, price) => {
         const pizza = {id, name, imgUrl, price, type: availableTypes[activeType], size: activeSize};
@@ -94,7 +108,9 @@ function Index({id, imageUrl, name, price, sizes, types}) {
                             />
                         </svg>
                         <span>Добавить</span>
-                        <i>{addedCount}</i>
+                        {
+                            totalCount > 0 ? <i>{addedCount()}</i> : null
+                        }
                     </div>
                 </div>
             </div>
