@@ -7,6 +7,7 @@ import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import qs from "qs";
 import {sortList} from "./componets/SortPopup";
+import {setItems, fetchPizzas} from "./redux/slices/pizzasSlice";
 
 
 export const SearchContext = createContext();
@@ -14,28 +15,23 @@ export const SortingAndFilteredPizzas = createContext();
 
 function App() {
     const navigate = useNavigate();
-    const [pizzas, setPizzas] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [searchValue, setSearchValue] = useState('');
 
     const {categoryId, sort, pageCount} = useSelector(state => state.filter)
+    const {pizzas, status} = useSelector(state => state.pizza)
     const dispatch = useDispatch();
     const isSearch = useRef(false);
     const isMounted = useRef(false);
 
-    const fetchPizzas = () => {
-        let urlData;
-        let order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
-        let search = searchValue !== '' ? `&search=${searchValue}` : '';
-        categoryId === 0 ? urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?page=${pageCount + 1}&limit=4&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`) :
-            urlData = new URL(`https://64138209a68505ea733524cc.mockapi.io/Cart?category=${categoryId}&sortBy=${sort.sortProperty.replace('-', '')}&order=${order}${search}`);
+    const fetchPizzaItems = async () => {
+        const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
+        const search = searchValue !== '' ? `&search=${searchValue}` : '';
 
-        axios.get(urlData).then(({data, status}) => {
-            setIsLoading(false);
-            setPizzas(data);
-        });
+        dispatch(fetchPizzas({
+            categoryId, sort, pageCount, order, search
+        }));
         window.scrollTo(0, 0);
-    }
+    };
 
     // Если был первый рендер, то проверяем URL-параметры и сохраняем в редаксе
     useEffect(() => {
@@ -54,7 +50,7 @@ function App() {
 
     useEffect(() => {
         if (!isSearch.current){
-            fetchPizzas();
+            fetchPizzaItems();
         }
 
         isSearch.current = false;
@@ -83,7 +79,7 @@ function App() {
                     <Route path="*"
                            element={
                                <Home
-                                   statusLoading={isLoading}
+                                   statusLoading={status}
                                    pizzasBlocks={pizzas}
                                />
                            }/>

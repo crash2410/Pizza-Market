@@ -3,7 +3,7 @@ import {ComponentPreview, Previews} from '@react-buddy/ide-toolbox'
 import {PaletteTree} from './palette'
 import {Button, CartEmpty, CartItem, Pagination} from "../componets";
 import App from "../App";
-import {Cart} from "../pages";
+import {Cart, Home} from "../pages";
 import Index from "../componets/PizzaBlock";
 
 const ComponentPreviews = () => {
@@ -29,6 +29,9 @@ const ComponentPreviews = () => {
             </ComponentPreview>
             <ComponentPreview path="/Button">
                 <Button/>
+            </ComponentPreview>
+            <ComponentPreview path="/Home">
+                <Home/>
             </ComponentPreview>
         </Previews>
     )
