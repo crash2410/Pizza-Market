@@ -4,7 +4,8 @@ import axios from "axios";
 // Создание асинхронного thunk для получения пицц
 export const fetchPizzas = createAsyncThunk(
     'pizza/fetchPizzasStatus',
-    async ({categoryId, sort, pageCount, order, search}) => {
+    async ({categoryId, sort, pageCount, order, search}, thunkAPI) => {
+        console.log(thunkAPI);
         // Создание URL-адреса на основе переданных параметров
         const urlData = new URL(
             categoryId === 0
@@ -21,6 +22,11 @@ export const fetchPizzas = createAsyncThunk(
         // Выполнение GET-запроса на указанный URL-адрес
         const {data} = await axios.get(urlData);
 
+        // if (data.length === 0) {
+        //     return thunkAPI.rejectWithValue('Пиццы не найдены');
+        // }
+        //
+        // return thunkAPI.fulfillWithValue(data);
         return await data;
     }
 );
@@ -59,6 +65,8 @@ export const pizzasSlice = createSlice({
         }
     }
 })
+
+export const selectorPizza = (state) => state.pizza;
 
 // Экспорт редюсера и экшенов среза пицц
 export const {setItems} = pizzasSlice.actions;

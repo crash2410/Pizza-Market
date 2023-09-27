@@ -2,23 +2,19 @@ import {Header} from './componets';
 import {Cart, Home, NotFound} from "./pages";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {createContext, useEffect, useRef, useState} from "react";
-import {setFilters} from './redux/slices/filterSlice';
+import {selectorFilter, setFilters} from './redux/slices/filterSlice';
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import qs from "qs";
 import {sortList} from "./componets/SortPopup";
-import {setItems, fetchPizzas} from "./redux/slices/pizzasSlice";
-
-
-export const SearchContext = createContext();
-export const SortingAndFilteredPizzas = createContext();
+import {setItems, fetchPizzas, selectorPizza} from "./redux/slices/pizzasSlice";
 
 function App() {
     const navigate = useNavigate();
-    const [searchValue, setSearchValue] = useState('');
 
-    const {categoryId, sort, pageCount} = useSelector(state => state.filter)
-    const {pizzas, status} = useSelector(state => state.pizza)
+    const {categoryId, sort, pageCount, searchValue} = useSelector(selectorFilter)
+    const {pizzas, status} = useSelector(selectorPizza)
+
     const dispatch = useDispatch();
     const isSearch = useRef(false);
     const isMounted = useRef(false);
@@ -71,9 +67,9 @@ function App() {
 
     return (
         <div className="wrapper">
-            <SearchContext.Provider value={{searchValue, setSearchValue}}>
+
                 <Header/>
-            </SearchContext.Provider>
+
             <div className="content">
                 <Routes>
                     <Route path="*"
